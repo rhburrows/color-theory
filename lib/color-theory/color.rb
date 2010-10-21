@@ -29,19 +29,36 @@ module ColorTheory
     end
 
     def ==(other)
-      r == other.r && g == other.g && b == other.b
+      other.is_a?(Color) &&
+        r == other.r &&
+        g == other.g &&
+        b == other.b
     end
 
-    def shade
-      Color.new(r - 51,
-                g - 51,
-                b - 51)
+    def shade(percent = 0.2)
+      amount = (255 * percent).to_i
+      Color.new(r - amount,
+                g - amount,
+                b - amount)
     end
 
-    def tint
-      Color.new(r + 51,
-                g + 51,
-                b + 51)
+    def tint(percent = 0.2)
+      amount = (255 * percent).to_i
+      Color.new(r + amount,
+                g + amount,
+                b + amount)
+    end
+
+    def inspect
+      "rgb(#{r}, #{g}, #{b})"
+    end
+    alias :to_s :inspect
+
+    def hash
+      hash =  r.hash << 1
+      hash ^= g.hash << 9
+      hash ^= b.hash << 24;
+      return hash
     end
   end
 end

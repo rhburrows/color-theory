@@ -1,1 +1,1 @@
-require 'color-theory/color'
+require 'color-theory'
