@@ -59,5 +59,61 @@ module ColorTheory
       hash ^= excl << 24;
       return hash
     end
+
+    def step(percent = 0.2)
+      r_range = get_range(first.r, last.r)
+      g_range = get_range(first.g, last.g)
+      b_range = get_range(first.b, last.b)
+
+      r_step = (r_range.last - r_range.first) * percent
+      g_step = (g_range.last - g_range.first) * percent
+      b_step = (b_range.last - b_range.first) * percent
+
+      current_color = first
+      while (current_color.r <= r_range.last &&
+             current_color.g <= g_range.last &&
+             current_color.b <= b_range.last &&
+             current_color != last)
+        yield current_color
+
+        new_r = next_value(r_range, r_step, current_color.r).to_i
+        new_g = next_value(g_range, g_step, current_color.g).to_i
+        new_b = next_value(b_range, b_step, current_color.b).to_i
+
+        current_color = Color.new(new_r, new_g, new_b)
+      end
+
+      yield last unless exclude_end?
+    end
+
+    def each(&blk)
+      step(0.2, &blk)
+    end
+
+    def get_range(one, other)
+      if one < other
+        Range.new(one, other, exclude_end?)
+      else
+        Range.new(other, one, exclude_end?)
+      end
+    end
+    private :get_range
+
+    def next_value(range, step, current)
+      nxt = current + step
+      if nxt > range.last
+        range.last
+      else
+        nxt
+      end
+    end
+    private :next_value
+
+    def eql?(other)
+      other.is_a?(Spectrum) &&
+        first.eql?(other.first) &&
+        last.eql?(other.last) &&
+        (exclude_end? == other.exclude_end?)
+    end
   end
 end

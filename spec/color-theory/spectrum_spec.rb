@@ -143,7 +143,30 @@ module ColorTheory
     end
 
     describe "#each" do
-      it "TODO"
+      it "takes 5 (equal) steps through the spectrum" do
+        colors = []
+        Spectrum.new(black, red, true).each do |color|
+          colors << color
+        end
+        colors.should == [ black,
+                           Color.new(51, 0, 0),
+                           Color.new(102, 0, 0),
+                           Color.new(153, 0, 0),
+                           Color.new(204, 0, 0) ]
+      end
+
+      it "includes the last step if not exclude_end" do
+        colors = []
+        Spectrum.new(black, red, false).each do |color|
+          colors << color
+        end
+        colors.should == [ black,
+                           Color.new(51, 0, 0),
+                           Color.new(102, 0, 0),
+                           Color.new(153, 0, 0),
+                           Color.new(204, 0, 0),
+                           Color.new(255, 0, 0) ]
+      end
     end
 
     describe "#end" do
@@ -159,7 +182,29 @@ module ColorTheory
     end
 
     describe "#eql?" do
-      it "TODO"
+      it "returns true if the two ends are #eql? and the exclude_end" do
+        s1 = Spectrum.new(black, white)
+        s2 = Spectrum.new(black, white)
+        s1.eql?(s2).should be_true
+      end
+
+      it "returns false if the first aren't #eql" do
+        s1 = Spectrum.new(black, white)
+        s2 = Spectrum.new(red, white)
+        s1.eql?(s2).should be_false
+      end
+
+      it "returns false if the last aren't #eql" do
+        s1 = Spectrum.new(black, white)
+        s2 = Spectrum.new(black, red)
+        s1.eql?(s2).should be_false
+      end
+
+      it "returns false if the exclude_end aren't the same" do
+        s1 = Spectrum.new(black, white, true)
+        s2 = Spectrum.new(black, white, false)
+        s1.eql?(s2).should be_false
+      end
     end
 
     describe "#exclude_end?" do
@@ -224,7 +269,51 @@ module ColorTheory
     end
 
     describe "#step" do
-      it "TODO"
+      it "takes 5 (equal) steps through the spectrum" do
+        colors = []
+        Spectrum.new(black, red, true).step do |color|
+          colors << color
+        end
+        colors.should == [ black,
+                           Color.new(51, 0, 0),
+                           Color.new(102, 0, 0),
+                           Color.new(153, 0, 0),
+                           Color.new(204, 0, 0) ]
+      end
+
+      it "includes the last step if not exclude_end" do
+        colors = []
+        Spectrum.new(black, red, false).step do |color|
+          colors << color
+        end
+        colors.should == [ black,
+                           Color.new(51, 0, 0),
+                           Color.new(102, 0, 0),
+                           Color.new(153, 0, 0),
+                           Color.new(204, 0, 0),
+                           red ]
+      end
+
+      it "makes steps of the specified percent size" do
+        colors = []
+        Spectrum.new(black, white, true).step(0.5) do |color|
+          colors << color
+        end
+        colors.should == [ black,
+                           Color.new(127, 127, 127),
+                           Color.new(254, 254, 254) ]
+      end
+
+      it "makes steps of the specified size and includes the last" do
+        colors = []
+        Spectrum.new(black, white, false).step(0.5) do |color|
+          colors << color
+        end
+        colors.should == [ black,
+                           Color.new(127, 127, 127),
+                           Color.new(254, 254, 254),
+                           white ]
+      end
     end
   end
 end
