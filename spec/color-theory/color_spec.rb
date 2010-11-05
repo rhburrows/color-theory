@@ -155,5 +155,24 @@ module ColorTheory
         Color.new(r,g,b).hash.should == Color.new(r,g,b).hash
       end
     end
+
+    describe "#+" do
+      let(:red) { Color.new(255, 0, 0) }
+      let(:green) { Color.new(0, 255, 0) }
+      let(:blue) { Color.new(0, 0, 255) }
+      let(:black) { Color.new(0, 0, 0) }
+
+      it "bisects the two red values" do
+        (red + black).should == Color.new(127, 0, 0)
+      end
+
+      it "bisects the two green values" do
+        (green + black).should == Color.new(0, 127, 0)
+      end
+
+      it "bisects the two blue values" do
+        (blue + black).should == Color.new(0, 0, 127)
+      end
+    end
   end
 end

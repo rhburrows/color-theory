@@ -60,5 +60,11 @@ module ColorTheory
       hash ^= b.hash << 24;
       return hash
     end
+
+    def +(other)
+      Color.new( (r + other.r) / 2,
+                 (g + other.g) / 2,
+                 (b + other.b) / 2)
+    end
   end
 end
