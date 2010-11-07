@@ -1,5 +1,9 @@
+require 'color-theory/web_colors'
+
 module ColorTheory
   class Color
+    include WebColors
+
     attr_reader :r, :g, :b
 
     def self.from_hex(code)
